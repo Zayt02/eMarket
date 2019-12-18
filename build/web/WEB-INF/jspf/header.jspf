@@ -75,8 +75,8 @@
                     </ol>
                 </li>
             </ol>
-            <form action="ControllerServlet" id="form-search" style="float: right">
-                <input type="text" id="key-search" name="key-search" placeholder="Tìm kiếm">
+            <form action="search" id="form-search" style="float: right" method="get">
+                <input type="text" id="key-search" name="search_string" placeholder="Tìm kiếm">
                 <button type="submit" id="submit" name="submit" class="button button8">Tìm</button>
             </form>
         </div>

@@ -139,11 +139,12 @@ public class ControllerServlet extends HttpServlet {
         }
         else if (userPath.equals("/search"))
         {
-            String searchString = (String) request.getAttribute("search_string");
-            String query1 = "SELECT p FROM Product p WHERE p.description like'%" + searchString 
-                    + "%' or p.descriptionDetail like'%" + searchString + "%'";
+            String searchString = (String) request.getParameter("search_string");
+            String query1 = "SELECT p FROM Product p WHERE p.description like '%" + searchString 
+                    + "%' or p.descriptionDetail like '%" + searchString + "%'";
             Collection<Product> result = productSB.findByUserQuery(query1);
-            request.setAttribute(query1, this);
+            request.setAttribute("search_result", result);
+            userPath = "search";
         }
         else if (userPath.equals("/logout")) {
             session.setAttribute("admin_mode", 0);

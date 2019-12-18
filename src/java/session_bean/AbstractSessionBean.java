@@ -48,7 +48,7 @@ public abstract class AbstractSessionBean<T> {
     
     public List<T> findByUserQuery(String query)
     {
-        Query q = getEntityManager().createNamedQuery(query);
+        Query q = getEntityManager().createQuery(query);
         return q.getResultList();
     }
 
