@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <listener>
+        <description>ServletContextListener</description>
+        <listener-class>listener.ControllerServletListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>ControllerServlet</servlet-name>
+        <servlet-class>controller.ControllerServlet</servlet-class>
+    </servlet>
+    <jsp-config>
+        <jsp-property-group>
+            <description>JSP configuration for the store front</description>
+            <url-pattern>/index.jsp</url-pattern>
+            <url-pattern>/contact.jsp</url-pattern>
+            <url-pattern>/category.jsp</url-pattern>
+            <url-pattern>/product.jsp</url-pattern>
+            <url-pattern>/login.jsp</url-pattern>
+            <url-pattern>/add_product.jsp</url-pattern>
+            <url-pattern>/viewCart.jsp</url-pattern>
+            <url-pattern>/checkout.jsp</url-pattern>
+            <url-pattern>/confirmation.jsp</url-pattern>
+            <!-- và các trang khác -->
+            <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
+        </jsp-property-group>
+        <!-- optional for admin GUI -->
+        <jsp-property-group>
+            <description>JSP configuration for the admin console
+            </description>
+            <url-pattern>/admin/*</url-pattern>
+            <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
+        </jsp-property-group>
+    </jsp-config>
+    <context-param>
+        <param-name>imgProductPath</param-name>
+        <param-value>img/demo/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>imgProductDetailPath</param-name>
+        <param-value>images/</param-value>
+    </context-param>
+    <context-param>
+        <description>The delivery fee</description>
+        <param-name>deliveryFee</param-name>
+        <param-value>5.00</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>ProductServlet</servlet-name>
+        <servlet-class>controller.ProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/ProductServlet</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>

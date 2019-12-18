@@ -1,0 +1,55 @@
+<%@page contentType="text/html; charset=UTF8" pageEncoding="UTF8"%>
+<!DOCTYPE html>
+<html>
+    	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF8">
+		<!-- CSS Files -->
+		<link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="menu/css/simple_menu.css">
+		<link rel="stylesheet" href="css/nivo-slider.css" type="text/css" media="screen">
+		<link rel="stylesheet" type="text/css" href="boxes/css/websymbols/style6.css">
+		<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox.css" media="all">
+		<!-- JS Files -->
+		<!-- ... -->
+	</head>
+    <body>
+        <div id="footer">
+            <!-- First column -->
+            <div class="one-fourth">
+                <h3>Customers' Services</h3>
+                <ul class="footer_links">
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <!-- Second column -->
+            <div class="one-fourth">
+                <h3>Administrator</h3>
+                    <% Integer admin_mode_footer = (Integer) request.getSession().getAttribute("admin_mode");
+                        if (admin_mode_footer == null || admin_mode_footer == 0) {%>
+                        <ul class="footer_links">
+                            <li><a href="login.jsp">Login</a></li>
+                        </ul>
+                    <%} else  {%>
+                        <ul class="footer_links">
+                            <li> Admin</li>
+                            <li><a href="add_product.jsp">Add Product</a></li>
+                            <li><a href="logout">Logout</a></li>
+                        </ul>
+                       <%}%>
+            </div>
+            <!-- Third column -->
+            <div class="one-fourth">
+                <h3>Information</h3>
+                For online shopping Apple's products.
+                <div id="social_icons"> Theme by <a href="http://csstemplateheaven.com">CssTemplateHeaven</a><br>
+                    Photo <a href="http://dieterschneider.net">Dieter Scheider</a></div>
+            </div>
+            <!-- Fourth column -->
+            <div class="one-fourth last">
+                <h3>Socialize</h3>
+                <img src="img/icon_fb.png" alt=""><img src="img/icon_twitter.png" alt=""><img src="img/icon_in.png" alt="">
+            </div>
+            <div style="clear:both"></div>
+        </div>
+    </body>
+</html>
