@@ -82,7 +82,7 @@
         <div id="container"><div id="container-inner">
 
                 <h1>New Product</h1>
-                <form name="input" action="ProductServlet" method="post" >
+                <form name="input" action="addProduct" method="post" >
                     <fieldset>
                         <!-- Your profile photo -->
                         <!--                        <div>
@@ -218,10 +218,10 @@
                             <label for="dob_year">Category</label>
                             <select name="category_id" id="dob_year">
                                 <option value=""> - Category - </option>
-                                <option value="1">Mac</option>
-                                <option value="2">Ipad</option>
-                                <option value="3">Iphone</option>
-                                <option value="4">Accessories</option>
+                                <c:forEach var="category" items="${categories}">
+
+                             <option value="${category.getCategoryId()}">${category.getName()}</option>
+                            </c:forEach>
                             </select>
                         </div>
                         <!--                            <label for="name_first">Category Id: </label>
@@ -244,7 +244,6 @@
                         <!-- Controls -->
                         <div class="controls">
                             <input id="submit" name="submit" type="submit" value="Save" />
-                            <input id="preview" name="submit" type="submit" value="Preview Profile" />
                         </div>
                     </fieldset>
                 </form>

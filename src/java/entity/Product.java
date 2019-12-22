@@ -43,7 +43,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Product.findByLastUpdate", query = "SELECT p FROM Product p WHERE p.lastUpdate = :lastUpdate"),
     @NamedQuery(name = "Product.findByImage", query = "SELECT p FROM Product p WHERE p.image = :image"),
     @NamedQuery(name = "Product.findByThumbImage", query = "SELECT p FROM Product p WHERE p.thumbImage = :thumbImage"),
-    @NamedQuery(name = "Product.findByDescriptionDetail", query = "SELECT p FROM Product p WHERE p.descriptionDetail = :descriptionDetail")})
+    @NamedQuery(name = "Product.findByDescriptionDetail", query = "SELECT p FROM Product p WHERE p.descriptionDetail = :descriptionDetail"),
+    @NamedQuery(name = "Product.findByNumAvailable", query = "SELECT p FROM Product p WHERE p.numAvailable = :numAvailable"),
+    @NamedQuery(name = "Product.findBySales", query = "SELECT p FROM Product p WHERE p.sales = :sales")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,6 +75,10 @@ public class Product implements Serializable {
     @Size(max = 1000)
     @Column(name = "description_detail")
     private String descriptionDetail;
+    @Column(name = "num_available")
+    private Integer numAvailable;
+    @Column(name = "sales")
+    private Integer sales;
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     @ManyToOne
     private Category categoryId;
@@ -150,6 +156,22 @@ public class Product implements Serializable {
 
     public void setDescriptionDetail(String descriptionDetail) {
         this.descriptionDetail = descriptionDetail;
+    }
+
+    public Integer getNumAvailable() {
+        return numAvailable;
+    }
+
+    public void setNumAvailable(Integer numAvailable) {
+        this.numAvailable = numAvailable;
+    }
+
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
     }
 
     public Category getCategoryId() {

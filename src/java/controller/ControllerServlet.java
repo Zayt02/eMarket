@@ -38,16 +38,16 @@ import javax.persistence.EntityManager;
             "/index",
             "/category",
             "/product",
-            "/logout",
-            "/add_product",
-            "/login",
             "/addToCart",
             "/viewCart",
             "/updateCart",
-            "/checkout",
             "/purchase", 
             "/deleteProduct",
-            "/search"
+            "/search",
+            "/viewAllOrder",
+            "/viewOrder",
+            "/edit_order",
+            "/editOrder"
             })
 public class ControllerServlet extends HttpServlet {
 
@@ -68,10 +68,9 @@ public class ControllerServlet extends HttpServlet {
     private ProductDetailSessionBean productDetailSB;
     @EJB
     private OrderManager orderManager;
+    @EJB
+    private CustomerOrderSessionBean customerOrderSB;
     
-
-    private String admin_name = "admin";
-    private String password = "admin123456";
 
 //    @Override
 //    public void init(ServletConfig servletConfig) throws ServletException {
@@ -140,16 +139,12 @@ public class ControllerServlet extends HttpServlet {
         else if (userPath.equals("/search"))
         {
             String searchString = (String) request.getParameter("search_string");
-            String query1 = "SELECT p FROM Product p WHERE p.description like '%" + searchString 
+            String query1 = "SELECT p FROM Product p WHERE p.name like '%" + searchString +
+                    "%' or p.description like '%" + searchString 
                     + "%' or p.descriptionDetail like '%" + searchString + "%'";
             Collection<Product> result = productSB.findByUserQuery(query1);
             request.setAttribute("search_result", result);
             userPath = "search";
-        }
-        else if (userPath.equals("/logout")) {
-            session.setAttribute("admin_mode", 0);
-            session.setAttribute("is_first", 1);
-            userPath = "/index";
         } else if (userPath.equals("/viewCart")) {
             String clear = request.getParameter("clear");
             if ((clear != null) && clear.equals("true")) {
@@ -170,9 +165,37 @@ public class ControllerServlet extends HttpServlet {
                 Product product
                         = productSB.find(Integer.parseInt(productId));
                 cart.addItem(product);
+                cart.calculateTotal("5");
             }
             String userView = (String) session.getAttribute("view");
             userPath = userView;
+        }
+        else if (userPath.equals("/viewAllOrder"))
+        {
+            String query = "select c from CustomerOrder as c order by c.customerId.customerId";
+            List<CustomerOrder> orderList = customerOrderSB.findByUserQuery(query);
+            request.setAttribute("orderList", orderList);
+        }
+        else if (userPath.equals("/viewOrder"))
+        {
+            String orderId = request.getQueryString();
+            if (orderId != null && ((Integer)session.getAttribute("admin_mode")) == 1)
+            {
+                CustomerOrder order = customerOrderSB.find(Integer.parseInt(orderId));
+                request.setAttribute("order", order);
+            }
+            else userPath = "/index";
+        }
+        else if(userPath.equals("/edit_order"))
+        {
+            String orderId = request.getQueryString();
+
+            if (orderId != null && ((Integer)session.getAttribute("admin_mode")) == 1)
+            {
+                session.setAttribute("editedOrderId", Integer.parseInt(orderId));
+                request.setAttribute("editedOrder", customerOrderSB.find(Integer.parseInt(orderId)));
+            }
+            else userPath="/viewAllOrder";
         }
 
         String url = userPath + ".jsp";
@@ -203,19 +226,19 @@ public class ControllerServlet extends HttpServlet {
 //        ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
         Validator validator = new Validator();
         
-        String aname = request.getParameter("name");
-        String password = request.getParameter("password");
-        if (aname != null && password != null) {
-            session.setAttribute("is_first", 0);
-            if (aname.equals(this.admin_name) && password.equals(this.password)) {
-                session.setAttribute("admin_mode", 1);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-            } else {
-                session.setAttribute("admin_mode", 0);
-                request.getRequestDispatcher("login.jsp").forward(request, response);
-            }
-        }
-        else if (userPath.equals("/updateCart")) {
+//        String aname = request.getParameter("name");
+//        String password = request.getParameter("password");
+//        if (aname != null && password != null) {
+//            session.setAttribute("is_first", 0);
+//            if (aname.equals(this.admin_name) && password.equals(this.password)) {
+//                session.setAttribute("admin_mode", 1);
+//                request.getRequestDispatcher("index.jsp").forward(request, response);
+//            } else {
+//                session.setAttribute("admin_mode", 0);
+//                request.getRequestDispatcher("login.jsp").forward(request, response);
+//            }
+//        }
+        if (userPath.equals("/updateCart")) {
             ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
             String productId = request.getParameter("productId");
             String quantity = request.getParameter("quantity");
@@ -225,60 +248,18 @@ public class ControllerServlet extends HttpServlet {
                 cart.update(product, quantity);
             }
             userPath = "/viewCart";
-        } else if (userPath.equals("/purchase")) {
-            ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
-//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!");
-            if (cart != null) {         
-                String name = request.getParameter("name");
-                String email = request.getParameter("email");
-                String phone = request.getParameter("phone");
-                String address = request.getParameter("address");
-                String cityRegion = request.getParameter("cityRegion");
-                String ccNumber = request.getParameter("creditcard");
-                boolean validationErrorFlag = false;
-                validationErrorFlag = validator.validateForm(name, email,
-                        phone, address, cityRegion, ccNumber, request);
-//                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!");
-                if (validationErrorFlag) {
-                    request.setAttribute("validationErrorFlag",
-                            validationErrorFlag);
-                    userPath = "/checkout";
-                } else {
-                    int orderId = orderManager.placeOrder(name, email, phone,
-                            address, cityRegion, ccNumber, cart);
-                    if (orderId != 0) {
-// in case language was set using toggle, getlanguage choice before destroying session
-                        Locale locale = (Locale) session.getAttribute("javax.servlet.jsp.jstl.fmt.locale.session");
-                        String language = "";
-                        if (locale != null) {
-                            language = (String) locale.getLanguage();
-                        }
-// dissociate shopping cart from session
-                        cart = null;
-// end session
-                        session.invalidate();
-                        if (!language.isEmpty()) { //if user changed language using the toggle,
-//reset the language attribute - otherwise
-                            request.setAttribute("language", language); //language will be switched on confirmation page!
-                        }
-// get order details
-                        Map orderMap = orderManager.getOrderDetails(orderId);
-// place order details in request scope
-                        request.setAttribute("customer",
-                                orderMap.get("customer"));
-                        request.setAttribute("products",
-                                orderMap.get("products"));
-                        request.setAttribute("orderRecord",
-                                orderMap.get("orderRecord"));
-                        request.setAttribute("orderedProducts",
-                                orderMap.get("orderedProducts"));
-                        userPath = "/confirmation";
-// otherwise, send back to checkout page and display error
-                    } else {
-                        userPath = "/checkout";
-                        request.setAttribute("orderFailureFlag", true);
-                    }
-                }
+        }
+        else if (userPath.equals("/editOrder"))
+        {
+            if (((Integer)session.getAttribute("admin_mode")) == 0) userPath="/index";
+            else{
+                Integer orderId = (Integer) session.getAttribute("editedOrderId");
+                CustomerOrder order = customerOrderSB.find(orderId);
+                String status = request.getParameter("newStatus");
+                order.setStatus(status);
+                customerOrderSB.edit(order);
+                session.setAttribute("editedOrderId", null);
+                userPath = "/index";
             }
         }
         String url = userPath + ".jsp";

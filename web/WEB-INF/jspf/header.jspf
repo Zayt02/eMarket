@@ -1,3 +1,4 @@
+<%@page import="entity.Customer"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -19,22 +20,45 @@
         <script src="sliderengine/amazingslider.js"></script>
         <script src="sliderengine/initslider-1.js"></script>
         <!-- ... -->
+        <style>
+            div.relative {
+                top:10px;
+                position: relative;
+                left: 40%;
+            }
+        #form-search{
+            left: 38%;
+            padding: 12px 0px  9px 40px;
+            position: relative;
+        }
+        #key-search{
+            float: left;
+            outline: none;
+            border:1px solid #e1e1e1;
+            border-radius: 5px;
+            height: 36px;
+            width: 200px;
+            color: black;
+            padding-left: 15px;
+        }
+        #submit{
+            margin-top:4px;
+            right:76%;
+            float: right;
+            border:none;
+            position: absolute;
+            background: #fff;
+            color: #a3a3a3;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 8px;
+}
+        </style>
     </head>
     <body>
         <div class="header">
             <div id=”container”>
-                <c:if test="${!empty cart && cart.numberOfItems != 0 &&
-                              !fn:contains(pageContext.request.servletPath,'/checkout') &&
-                              requestScope['javax.servlet.forward.servlet_path']
-                              ne '/checkout' && !fn:contains(pageContext.request.servletPath,'/viewCart') &&
-                              requestScope['javax.servlet.forward.servlet_path']
-                              ne '/viewCart' &&
-                              validationErrorFlag ne true &&
-                              orderFailureFlag ne true}">
-                      <a href="<c:url value='checkout'/>">
-                          proceedCheckout
-                      </a>
-                </c:if>
+                
                 <img src="img/cart.png" alt="" >
                 <a href="<c:url value='viewCart'/>">
                     <c:choose>
@@ -55,30 +79,44 @@
                 </a>
                 ${cart.numberOfItems}
             </div>
+            <div id="container"><c:if test="${!empty cart && cart.numberOfItems != 0 &&
+                              !fn:contains(pageContext.request.servletPath,'/checkout') &&
+                              requestScope['javax.servlet.forward.servlet_path']
+                              ne '/checkout' && !fn:contains(pageContext.request.servletPath,'/viewCart') &&
+                              requestScope['javax.servlet.forward.servlet_path']
+                              ne '/viewCart' &&
+                              validationErrorFlag ne true &&
+                              orderFailureFlag ne true}">
+                      <a href="<c:url value='checkout'/>">
+                          proceedCheckout
+                      </a>
+                </c:if></div>
             <div id="site_title">
                 <img src="./img/logo.png" alt=""><br>
             </div>
             <ol id="menu">
                 <li class="active_menu_item"><a href="index.jsp" style="color:#FFF">Home</a></li>
                 <li><a href="#">Category</a>
-                    <!--                    <ol>
-                                            <li><a href="category?1">Mac</a></li>
-                                            <li><a href="category?3">iPad</a></li>
-                                            <li><a href="category?2">iPhone</a></li>
-                                            <li><a href="category?4">Accessories</a></li>
-                                        </ol>-->
                     <ol>
                         <c:forEach var="category" items="${categories}">
-
                             <li><a href="category?${category.getCategoryId()}">${category.getName()}</a></li>
                             </c:forEach>
                     </ol>
                 </li>
             </ol>
-            <form action="search" id="form-search" style="float: right" method="get">
-                <input type="text" id="key-search" name="search_string" placeholder="Tìm kiếm">
-                <button type="submit" id="submit" name="submit" class="button button8">Tìm</button>
-            </form>
+                <form action="search" id="form-search" method="get">
+                    <input type="text" id="key-search" name="search_string" placeholder="Tìm kiếm">
+                    <button type="submit" id="submit" name="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </form>
+            <%Customer user = (Customer) request.getSession().getAttribute("user");%>
+            <c:if test="${user != null}">
+                <a href="userProfile.jsp" style="float:right">${user.getUserName()}</a>
+                <br>
+                <a href="logout" style="float:right">Log out</a>
+            </c:if>
+            <c:if test="${user == null}">
+                <a href="userLogin.jsp" style="float:right">Login</a>
+            </c:if> 
         </div>
     </body>
 </html>

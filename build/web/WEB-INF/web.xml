@@ -8,6 +8,14 @@
         <servlet-name>ControllerServlet</servlet-name>
         <servlet-class>controller.ControllerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductServlet</servlet-name>
+        <servlet-class>controller.ProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>controller.UserServlet</servlet-class>
+    </servlet>
     <jsp-config>
         <jsp-property-group>
             <description>JSP configuration for the store front</description>
@@ -17,10 +25,20 @@
             <url-pattern>/product.jsp</url-pattern>
             <url-pattern>/login.jsp</url-pattern>
             <url-pattern>/add_product.jsp</url-pattern>
+            <url-pattern>/edit_product.jsp</url-pattern>
             <url-pattern>/viewCart.jsp</url-pattern>
             <url-pattern>/checkout.jsp</url-pattern>
             <url-pattern>/confirmation.jsp</url-pattern>
             <url-pattern>/search.jsp</url-pattern>
+            <url-pattern>/userLogin.jsp</url-pattern>
+            <url-pattern>/adminLogin.jsp</url-pattern>
+            <url-pattern>/userProfile.jsp</url-pattern>
+            <url-pattern>/editAddress.jsp</url-pattern>
+            <url-pattern>/newAddress.jsp</url-pattern>
+            <url-pattern>/viewAllOrder.jsp</url-pattern>
+            <url-pattern>/viewOrder.jsp</url-pattern>
+            <url-pattern>/before_cf.jsp</url-pattern>
+            <url-pattern>/edit_order.jsp</url-pattern>
             <!-- và các trang khác -->
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
             <include-coda>/WEB-INF/jspf/footer.jspf</include-coda>
@@ -47,14 +65,6 @@
         <param-name>deliveryFee</param-name>
         <param-value>5.00</param-value>
     </context-param>
-    <servlet>
-        <servlet-name>ProductServlet</servlet-name>
-        <servlet-class>controller.ProductServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ProductServlet</servlet-name>
-        <url-pattern>/ProductServlet</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

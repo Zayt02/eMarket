@@ -23,7 +23,7 @@ public class Validator {
         return false;
     }
     
-    public boolean validateForm(String name, String email, String phone, String address, String cityRegion, String ccNumber, HttpServletRequest request)
+    public boolean validateForm(String name, String email, String phone, String cityRegion, String ccNumber, HttpServletRequest request)
     {
         return false;
     }

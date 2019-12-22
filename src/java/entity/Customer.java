@@ -33,9 +33,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Customer.findByName", query = "SELECT c FROM Customer c WHERE c.name = :name"),
     @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email"),
     @NamedQuery(name = "Customer.findByPhone", query = "SELECT c FROM Customer c WHERE c.phone = :phone"),
-    @NamedQuery(name = "Customer.findByAddress", query = "SELECT c FROM Customer c WHERE c.address = :address"),
     @NamedQuery(name = "Customer.findByCityRegion", query = "SELECT c FROM Customer c WHERE c.cityRegion = :cityRegion"),
-    @NamedQuery(name = "Customer.findByCcNumber", query = "SELECT c FROM Customer c WHERE c.ccNumber = :ccNumber")})
+    @NamedQuery(name = "Customer.findByCcNumber", query = "SELECT c FROM Customer c WHERE c.ccNumber = :ccNumber"),
+    @NamedQuery(name = "Customer.findByUserName", query = "SELECT c FROM Customer c WHERE c.userName = :userName"),
+    @NamedQuery(name = "Customer.findByPassword", query = "SELECT c FROM Customer c WHERE c.password = :password")})
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,14 +57,21 @@ public class Customer implements Serializable {
     @Column(name = "phone")
     private String phone;
     @Size(max = 255)
-    @Column(name = "address")
-    private String address;
-    @Size(max = 255)
     @Column(name = "city_region")
     private String cityRegion;
     @Size(max = 45)
     @Column(name = "cc_number")
     private String ccNumber;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "user_name")
+    private String userName;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "password")
+    private String password;
     @OneToMany(mappedBy = "customerId")
     private Collection<CustomerOrder> customerOrderCollection;
 
@@ -72,6 +80,12 @@ public class Customer implements Serializable {
 
     public Customer(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public Customer(Integer customerId, String userName, String password) {
+        this.customerId = customerId;
+        this.userName = userName;
+        this.password = password;
     }
 
     public Integer getCustomerId() {
@@ -106,14 +120,6 @@ public class Customer implements Serializable {
         this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getCityRegion() {
         return cityRegion;
     }
@@ -128,6 +134,22 @@ public class Customer implements Serializable {
 
     public void setCcNumber(String ccNumber) {
         this.ccNumber = ccNumber;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @XmlTransient

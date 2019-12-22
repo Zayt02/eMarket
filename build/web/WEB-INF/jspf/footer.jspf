@@ -27,12 +27,13 @@
                     <% Integer admin_mode_footer = (Integer) request.getSession().getAttribute("admin_mode");
                         if (admin_mode_footer == null || admin_mode_footer == 0) {%>
                         <ul class="footer_links">
-                            <li><a href="login.jsp">Login</a></li>
+                            <li><a href="adminLogin.jsp">Login</a></li>
                         </ul>
                     <%} else  {%>
                         <ul class="footer_links">
                             <li> Admin</li>
                             <li><a href="add_product.jsp">Add Product</a></li>
+                            <li><a href="viewAllOrder">View All Order</a></li>
                             <li><a href="logout">Logout</a></li>
                         </ul>
                        <%}%>

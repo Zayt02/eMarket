@@ -33,15 +33,15 @@
         <div class="limiter">
             <div class="container-login100">
                 <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
-                    <form action="ControllerServlet" method="post">
+                    <form action="user_login" method="post">
                         <span class="login100-form-title p-b-33">
                             Account Login
                         </span>
-                        <% Integer admin_mode = (Integer) request.getSession().getAttribute("admin_mode");
-                            Integer is_first = (Integer) request.getSession().getAttribute("is_first");
+                        <%
+                            Integer user_mode = (Integer) request.getAttribute("user_mode");
                             // if (admin_mode == null) System.out.println(1);
-                            if (admin_mode != null && admin_mode == 0 && is_first == 0) {%> 
-                        <font color="red"> Invalid admin name or password!</font>
+                            if (user_mode != null && user_mode == 0) {%> 
+                        <font color="red"> Invalid name or password!</font>
                         <% }%>
                         <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
                             <input class="input100" type="text" name="name" placeholder="Email">
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="container-login100-form-btn m-t-20">
-                            <button class="login100-form-btn">
+                            <button type="submit" class="login100-form-btn">
                                 Sign in
                             </button>
                         </div>
@@ -85,24 +85,6 @@
             </div>
         </div>
 
-
-
-        <!--===============================================================================================-->
-        <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="vendor/animsition/js/animsition.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="vendor/bootstrap/js/popper.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="vendor/select2/select2.min.js"></script>
-        <!--===============================================================================================-->
-        <script src="vendor/daterangepicker/moment.min.js"></script>
-        <script src="vendor/daterangepicker/daterangepicker.js"></script>
-        <!--===============================================================================================-->
-        <script src="vendor/countdowntime/countdowntime.js"></script>
-        <!--===============================================================================================-->
-        <script src="js/main.js"></script>
 
     </body>
 </html>

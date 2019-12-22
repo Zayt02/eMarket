@@ -69,6 +69,12 @@
                    class="button">Delete</a> 
             </p>
             </c:if>
+            <c:if test="${admin_mode != null && admin_mode == 1}">
+            <p style="text-align:left; margin-right: 16px">
+                <a href="<c:url value='edit_product?${selectedProduct.getProductId()}'/>"
+                   class="button">Edit</a> 
+            </p>
+            </c:if>
         </div>
     </div>
     <div style="clear:both; height: 40px"></div>

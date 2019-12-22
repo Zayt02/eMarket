@@ -72,11 +72,9 @@
                 <table>
                     <tr>
                         <td colspan="3">
-                            ${customer.name}
+                            <strong>Name :</strong>${customer.name}
                             <br>
-                            ${customer.address}
-                            <br>
-                            City: ${customer.cityRegion}
+                            <strong>Address :</strong> ${orderRecord.getAddress()}
                             <br>
                             <hr>
                             <strong>Email :</strong>

@@ -52,16 +52,30 @@ public class OrderManager {
     private EntityManager em;
     @Resource
     private SessionContext context;
-    
-    public OrderManager(){}
+
+    public OrderManager() {
+    }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public int placeOrder(String name, String email, String phone, String address, String cityRegion, String ccNumber, ShoppingCart cart) {
+//    public int placeOrder(String name, String email, String phone, String cityRegion, String ccNumber, ShoppingCart cart) {
+//        try {
+//            Customer customer = addCustomer(name, email, phone,
+//                    cityRegion, ccNumber);
+////            System.out.println("!!!!!\n!!!!!!!!!\n!!!!!");
+//            CustomerOrder order = addOrder(customer, cart);
+//            addOrderedItems(order, cart);
+//            return order.getOrderId();
+//        } catch (Exception e) {
+//            context.setRollbackOnly();
+//            e.printStackTrace();
+//            return 0;
+//        }
+//    }
+
+    public int placeOrderWithoutCreateUser(Customer customer, ShoppingCart cart, String address) {
         try {
-            Customer customer = addCustomer(name, email, phone, address,
-                    cityRegion, ccNumber);
-//            System.out.println("!!!!!\n!!!!!!!!!\n!!!!!");
-            CustomerOrder order = addOrder(customer, cart);
+
+            CustomerOrder order = addOrder(customer, cart, address);
             addOrderedItems(order, cart);
             return order.getOrderId();
         } catch (Exception e) {
@@ -72,20 +86,19 @@ public class OrderManager {
     }
 
     private Customer addCustomer(String name, String email, String phone,
-            String address, String cityRegion, String ccNumber) {
+            String cityRegion, String ccNumber) {
         Customer customer = new Customer();
         customer.setCustomerId(customerSB.findAll().size() + 1);
         customer.setName(name);
         customer.setEmail(email);
         customer.setPhone(phone);
-        customer.setAddress(address);
         customer.setCityRegion(cityRegion);
         customer.setCcNumber(ccNumber);
         customerSB.create(customer);
         return customer;
     }
 
-    private CustomerOrder addOrder(Customer customer, ShoppingCart cart) {
+    private CustomerOrder addOrder(Customer customer, ShoppingCart cart, String address) {
 // set up customer order
         int id = customerOrderSB.findAll().size() + 1;
         CustomerOrder order = new CustomerOrder();
@@ -93,6 +106,8 @@ public class OrderManager {
         cart.calculateTotal("5");
         order.setAmount(cart.getTotal());
         order.setOrderId(id);
+        order.setAddress(address);
+        order.setStatus("Processing");
 // create confirmation number
         Random random = new Random();
         int i = random.nextInt(999999999);
@@ -103,8 +118,9 @@ public class OrderManager {
         return order;
     }
 
-    private void addOrderedItems(CustomerOrder order, ShoppingCart cart) {
+    private List<OrderedProduct> addOrderedItems(CustomerOrder order, ShoppingCart cart) {
         List<ShoppingCartItem> items = cart.getItems();
+        List<OrderedProduct> result = new ArrayList<OrderedProduct>();
 // iterate through shopping cart and create OrderedProducts
         for (ShoppingCartItem scItem : items) {
             int productId = scItem.getProduct().getProductId();
@@ -118,7 +134,9 @@ public class OrderManager {
             orderedItem.setQuantity(scItem.getQuantity());
             orderedProductSB.create(orderedItem);
         }
+        return result;
     }
+
 
     public Map getOrderDetails(int orderId) {
         Map orderMap = new HashMap();
